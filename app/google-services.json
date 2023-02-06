@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "312195271485",
-    "project_id": "moviedroid-5e977",
-    "storage_bucket": "moviedroid-5e977.appspot.com"
+    "project_number": "935596747969",
+    "project_id": "moviedroid-8cea8",
+    "storage_bucket": "moviedroid-8cea8.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:312195271485:android:144f6c3d868d4a18ec9354",
+        "mobilesdk_app_id": "1:935596747969:android:752fc089175845380fb840",
         "android_client_info": {
           "package_name": "com.pec_acm.moviedroid"
         }
       },
       "oauth_client": [
         {
-          "client_id": "312195271485-rd44fta4n39r4p8l7amp8n53lpdgeqdj.apps.googleusercontent.com",
+          "client_id": "935596747969-fg0jbot9rtnudogi3cugkvprcsqfc21h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pec_acm.moviedroid",
+            "certificate_hash": "fb08d787673c99026082cceee65be9f4b7ee32c0"
+          }
+        },
+        {
+          "client_id": "935596747969-f8k1snhfrk8tfbigp00nn026d57lje24.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBo4sHSg1iVhx74KWapZEBPIzhaI4gNmEM"
+          "current_key": "AIzaSyAgfHDcGu68VuNpEgFrQXA6fxWzhOrkMnI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "312195271485-rd44fta4n39r4p8l7amp8n53lpdgeqdj.apps.googleusercontent.com",
+              "client_id": "935596747969-f8k1snhfrk8tfbigp00nn026d57lje24.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
