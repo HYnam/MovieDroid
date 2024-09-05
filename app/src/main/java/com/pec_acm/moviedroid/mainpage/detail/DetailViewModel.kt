@@ -1,14 +1,14 @@
 package com.pec_acm.moviedroid.mainpage.detail
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.pec_acm.moviedroid.data.api.TMDBApi
-import com.pec_acm.moviedroid.model.MovieCredits
-import com.pec_acm.moviedroid.model.MovieDetail
-import com.pec_acm.moviedroid.model.MovieTvVideo
-import com.pec_acm.moviedroid.model.TVDetail
+import com.pec_acm.moviedroid.firebase.ListItem
+import com.pec_acm.moviedroid.firebase.User
+import com.pec_acm.moviedroid.model.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,9 +24,18 @@ class DetailViewModel @Inject constructor(
     val tvVideoDetails: MutableLiveData<MovieTvVideo> = MutableLiveData()
 
     //movie and tv shows credits
-    val movieCreditsList: MutableLiveData<MovieCredits> = MutableLiveData()
-    val tvCreditsList: MutableLiveData<MovieCredits> = MutableLiveData()
+    val movieCreditsList: MutableLiveData<MovieTvCredits> = MutableLiveData()
+    val tvCreditsList: MutableLiveData<MovieTvCredits> = MutableLiveData()
 
+    // person details
+    val personDetailList: MutableLiveData<PersonDetail> = MutableLiveData()
+    val personCreditsList: MutableLiveData<PersonCredits> = MutableLiveData()
+
+    private var databaseReference = Firebase.database.reference
+    private var userReference = databaseReference.child("Users")
+    val user : MutableLiveData<User> = MutableLiveData()
+
+    val isFav: MutableLiveData<Boolean> = MutableLiveData(false)
 
     fun getMovieDetail(id: Int) {
         viewModelScope.launch {
@@ -64,4 +73,60 @@ class DetailViewModel @Inject constructor(
         }
     }
 
+    fun getPersonDetail(id: Int) {
+        viewModelScope.launch {
+            personDetailList.value = api.personDetailsByID(person_id = id).body()
+        }
+    }
+
+    fun getPersonCredits(id: Int) {
+        viewModelScope.launch {
+            personCreditsList.value = api.personCreditByID(person_id = id).body()
+        }
+    }
+
+    fun addFavItem(uid : String,listItem: ListItem)
+    {
+        viewModelScope.launch {
+            userReference.child(uid).get().addOnCompleteListener {
+                val user = it.result.getValue(User::class.java)
+                user?.favList?.add(listItem)
+                userReference.child(uid).setValue(user)
+                isFav.value = true
+            }
+        }
+    }
+
+    fun removeFavItem(uid : String,listItem: ListItem)
+    {
+        viewModelScope.launch {
+            userReference.child(uid).get().addOnCompleteListener {
+                val user = it.result.getValue(User::class.java)
+                user?.favList?.remove(listItem)
+                userReference.child(uid).setValue(user)
+                isFav.value = false
+            }
+        }
+    }
+
+    fun setFavItem(uid : String,listItem: ListItem)
+    {
+        viewModelScope.launch {
+            userReference.child(uid).get().addOnCompleteListener {
+                val user = it.result.getValue(User::class.java)
+                isFav.value = user?.favList?.contains(listItem) == true
+            }
+        }
+    }
+
+    fun setItemRating(uid: String, itemId: Int, rating: Double)
+    {
+        viewModelScope.launch {
+            userReference.child(uid).get().addOnCompleteListener { ref ->
+                val user = ref.result.getValue(User::class.java)
+                user?.userList?.find { it.id == itemId }?.score = rating
+                userReference.child(uid).setValue(user)
+            }
+        }
+    }
 }

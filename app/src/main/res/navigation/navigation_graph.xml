@@ -49,6 +49,10 @@
         android:name="com.pec_acm.moviedroid.mainpage.list.ListFragment"
         android:label="Your List"
         tools:layout="@layout/fragment_list">
+        <argument
+            android:name="toPageNo"
+            android:defaultValue="0"
+            app:argType="integer" />
         <action
             android:id="@+id/action_listFragment_to_tvDetailFragment"
             app:destination="@id/tvDetailFragment" />
@@ -65,6 +69,9 @@
         <argument
             android:name="itemID"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_movieDetailFragment_to_personDetailFragment"
+            app:destination="@id/personDetailFragment" />
     </fragment>
 
     <dialog
@@ -80,6 +87,9 @@
         <argument
             android:name="itemID"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_tvDetailFragment_to_personDetailFragment"
+            app:destination="@id/personDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/allItems"
@@ -97,6 +107,37 @@
             app:destination="@id/tvDetailFragment" />
         <action
             android:id="@+id/action_allItems_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/personDetailFragment"
+        android:name="com.pec_acm.moviedroid.mainpage.detail.PersonDetailFragment"
+        android:label="fragment_person_detail"
+        tools:layout="@layout/fragment_person_detail" >
+        <argument
+            android:name="itemID"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_personDetailFragment_to_tvDetailFragment"
+            app:destination="@id/tvDetailFragment" />
+        <action
+            android:id="@+id/action_personDetailFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.pec_acm.moviedroid.mainpage.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_tvDetailFragment"
+            app:destination="@id/tvDetailFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_movieDetailFragment"
             app:destination="@id/movieDetailFragment" />
     </fragment>
 </navigation>

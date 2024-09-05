@@ -5,15 +5,14 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.*
 import com.pec_acm.moviedroid.databinding.ActivityLoginBinding
-import com.pec_acm.moviedroid.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,15 +27,15 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+        installSplashScreen()
         if (FirebaseAuth.getInstance().currentUser != null) {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
-        binding.signInButton.setOnClickListener { signInToGoogle() }
+
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         configureGoogleClient()
 
@@ -49,8 +48,6 @@ class LoginActivity : AppCompatActivity() {
             .build()
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-
-        binding.signInButton.setSize(SignInButton.SIZE_WIDE)
 
         firebaseAuth = FirebaseAuth.getInstance()
     }
@@ -69,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    private fun signInToGoogle() {
+    fun signInToGoogle() {
         val signInIntent = mGoogleSignInClient!!.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
 

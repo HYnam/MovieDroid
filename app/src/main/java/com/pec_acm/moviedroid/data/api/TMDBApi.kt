@@ -108,12 +108,31 @@ interface TMDBApi {
         @Path("movie_id") movie_id: Int,
         @Query("api_key")
         apiKey: String = Constants.API_KEY
-    ) : Response<MovieCredits>
+    ) : Response<MovieTvCredits>
 
-    @GET("movie/{tv_id}/credits")
+    @GET("tv/{tv_id}/credits")
     suspend fun tvCreditsByID(
         @Path("tv_id") tv_id: Int,
         @Query("api_key")
         apiKey: String = Constants.API_KEY
-    ) : Response<MovieCredits>
+    ) : Response<MovieTvCredits>
+
+    @GET("person/{person_id}")
+    suspend fun personDetailsByID(
+            @Path("person_id") person_id: Int,
+            @Query("api_key")
+            apiKey: String = Constants.API_KEY
+    ) : Response<PersonDetail>
+
+    @GET("person/{person_id}/combined_credits")
+    suspend fun personCreditByID(
+            @Path("person_id") person_id: Int,
+            @Query("api_key") apiKey: String = Constants.API_KEY
+    ) : Response<PersonCredits>
+
+    @GET("search/person")
+    suspend fun searchPerson(
+            @Query("query") query: String,
+            @Query("api_key") apiKey : String = Constants.API_KEY
+    ) : Response<PersonListResponse>
 }

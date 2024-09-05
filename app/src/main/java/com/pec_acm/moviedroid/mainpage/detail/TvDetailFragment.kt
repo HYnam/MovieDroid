@@ -1,7 +1,6 @@
 package com.pec_acm.moviedroid.mainpage.detail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
@@ -9,9 +8,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
+import com.pec_acm.moviedroid.R
 import com.pec_acm.moviedroid.databinding.FragmentTvDetailBinding
+import com.pec_acm.moviedroid.firebase.ListItem.Companion.toListItem
+import com.pec_acm.moviedroid.mainpage.adapters.CastAdapter
 import com.pec_acm.moviedroid.mainpage.adapters.VideoAdapter
-import com.pec_acm.moviedroid.mainpage.adapters.CreditsAdapter
+import com.pec_acm.moviedroid.mainpage.adapters.CrewAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,6 +22,8 @@ class TvDetailFragment : Fragment() {
     private lateinit var detailViewModel: DetailViewModel
     private val args: TvDetailFragmentArgs by navArgs()
     lateinit var binding: FragmentTvDetailBinding
+
+    var expandedText: Boolean = false
 
     @Suppress("UNREACHABLE_CODE")
     override fun onCreateView(
@@ -36,12 +41,31 @@ class TvDetailFragment : Fragment() {
                 Glide.with(this).load("https://image.tmdb.org/t/p/w780" + tvDetail.backdrop_path)
                     .into(binding.image)
             }
+            binding.rating.text = String.format("%.2f", tvDetail.vote_average)
             var genres = ""
             for (i in tvDetail.genres) {
                 genres += i.name + "  "
             }
             binding.genre.text = genres
             binding.overview.text = tvDetail.overview
+            binding.overview.maxLines = 4
+            detailViewModel.setFavItem(FirebaseAuth.getInstance().uid!!, tvDetail.toListItem())
+            detailViewModel.isFav.observe(viewLifecycleOwner) { fav ->
+                if (fav) {
+                    binding.favBtn.setBackgroundResource(R.drawable.ic_favorite_red_24)
+                }
+                binding.favBtn.setOnClickListener {
+                    if (fav) {
+                        detailViewModel.removeFavItem(FirebaseAuth.getInstance().uid!!, tvDetail.toListItem())
+                        binding.favBtn.setBackgroundResource(R.drawable.ic_favorite_shadow_24)
+                    }
+                    else {
+                        detailViewModel.addFavItem(FirebaseAuth.getInstance().uid!!, tvDetail.toListItem())
+                        binding.favBtn.setBackgroundResource(R.drawable.ic_favorite_red_24)
+                    }
+                }
+            }
+            detailViewModel.setItemRating(FirebaseAuth.getInstance().uid!!, tvDetail.id, tvDetail.vote_average)
         }
 
 
@@ -52,13 +76,28 @@ class TvDetailFragment : Fragment() {
             }
         }
 
+        binding.expandCollapse.setOnClickListener {
+            expandedText = !expandedText
+            if(expandedText){
+                binding.overview.maxLines = Int.MAX_VALUE
+                binding.expandCollapse.rotation = 180f
+            } else {
+                binding.overview.maxLines = 4
+                binding.expandCollapse.rotation = 0f
+            }
+        }
+
 
         //tv credits
         detailViewModel.getTvCredits(args.itemID)
         detailViewModel.tvCreditsList.observe(viewLifecycleOwner) { tvCredits ->
-            binding.rvTvCredits.layoutManager =
+            binding.rvTvCast.layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            binding.rvTvCast.adapter = CastAdapter(requireContext(), tvCredits.cast.distinctBy { it.id }, getString(R.string.tv_item_category))
+
+            binding.rvTvCrew.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            binding.rvTvCredits.adapter = CreditsAdapter(requireContext(), tvCredits.crew)
+            binding.rvTvCrew.adapter = CrewAdapter(requireContext(), tvCredits.crew.distinctBy { it.id }, getString(R.string.tv_item_category))
         }
 
         return binding.root

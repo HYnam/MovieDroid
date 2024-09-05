@@ -27,6 +27,15 @@
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax" />
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/favBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="bottom|end"
+                android:background="@drawable/ic_favorite_shadow_24"
+                android:layout_marginBottom="12dp"
+                android:layout_marginEnd="12dp" />
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -47,13 +56,28 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/genre"
+                android:id="@+id/rating"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_10sdp"
                 android:textSize="@dimen/_12sdp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:drawablePadding="@dimen/_4sdp"
+                app:drawableStartCompat="@drawable/ic_star"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                tools:text="Rated: 10/10" />
+
+            <TextView
+                android:id="@+id/genre"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:textSize="@dimen/_12sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rating"
                 tools:text="thriller" />
 
             <ScrollView
@@ -116,13 +140,24 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto"
-                    android:text="Cast and Crew"
+                    android:text="Cast"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvMovieCredits"
+                    android:id="@+id/rvMovieCast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Crew"
+                    android:textSize="@dimen/_16ssp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvMovieCrew"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
